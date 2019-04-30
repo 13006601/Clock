@@ -93,6 +93,10 @@ public class View implements Observer{
         } else if (option == JOptionPane.OK_OPTION){
             // user entered a number
            String message = JOptionPane.showInputDialog("Alarm message",JOptionPane.INFORMATION_MESSAGE);
+           String value = spinner.getValue().toString();
+           System.out.println(value);
+           
+          
         }
         
         
