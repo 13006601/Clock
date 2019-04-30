@@ -85,6 +85,8 @@ public class View implements Observer{
         SpinnerDateModel sm =
         new SpinnerDateModel(date,null,null,Calendar.HOUR_OF_DAY);
         JSpinner spinner = new JSpinner(sm);
+        JSpinner.DateEditor de = new JSpinner.DateEditor(spinner,"HH:mm");
+        spinner.setEditor(de);
         int option = JOptionPane.showOptionDialog(null, spinner, "Add alarm time", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
         if (option == JOptionPane.CANCEL_OPTION){
             // user hit cancel
@@ -92,8 +94,7 @@ public class View implements Observer{
             // user entered a number
            String message = JOptionPane.showInputDialog("Alarm message",JOptionPane.INFORMATION_MESSAGE);
         }
-        //JSpinner.DateEditor de = new JSpinner.DateEditor(spinner,"HH:mm:ss");
-        //spinner.setEditor(de);
+        
         
     }
 }  
