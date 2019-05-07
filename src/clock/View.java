@@ -17,7 +17,7 @@ public class View implements Observer{
     
     ClockPanel panel;
     JButton AddAlarm;
-
+    PriorityQueue<Alarm> q = new SortedLinkedListPriorityQueue<>(8);
     
     public View(Model model) {
         JFrame frame = new JFrame();
@@ -66,6 +66,7 @@ public class View implements Observer{
             public void actionPerformed(ActionEvent ae) {
                
                 AddAlarm();
+
                 
                
             }
@@ -94,12 +95,24 @@ public class View implements Observer{
             // user entered a number
            String message = JOptionPane.showInputDialog("Alarm message",JOptionPane.INFORMATION_MESSAGE);
            String value = spinner.getValue().toString();
-           System.out.println(value);
-           System.out.println(message);
+           //System.out.println(value);
+           ///System.out.println(message);
            
-           
-           
+         //  String text = message.substring(2, value.lastIndexOf(' '));
+           String text = message.toString();
+           System.out.println(text);
+           Alarm alarm = new Alarm(text);
+          // String P = String.parseInt(value.toString());
+          String valueToString = String.valueOf(value);
           
+           System.out.println("Adding " + alarm.getAlarm() + " with priority " + value);
+          /* try {
+                    q.add(alarm, value);
+                } catch (QueueOverflowException e) {
+                    
+                    System.out.println("Add operation failed: " + e);
+                }
+*/
         }
         
         
