@@ -95,6 +95,9 @@ public class View implements Observer{
            String message = JOptionPane.showInputDialog("Alarm message",JOptionPane.INFORMATION_MESSAGE);
            String value = spinner.getValue().toString();
            System.out.println(value);
+           System.out.println(message);
+           
+           
            
           
         }
