@@ -1,11 +1,11 @@
-
 package clock;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SortedLinkedListPriorityQueue<T> implements PriorityQueue<T> {
-     /*
+     
+    /*
      this is the node whare is all the data stored
     */
    private  ListNode<T> front;
@@ -44,7 +44,7 @@ public class SortedLinkedListPriorityQueue<T> implements PriorityQueue<T> {
            throw new QueueUnderflowException();
        }
        
-       return front.getItem();
+       return front.getMessage();
     }
     
     /*
@@ -53,7 +53,7 @@ public class SortedLinkedListPriorityQueue<T> implements PriorityQueue<T> {
     to loves.
     */
     @Override
-    public void add(T item, int priority)
+    public void AddAlarm(T message, int value)
     {
         /*
          this if statement is checking if the queue is empty if it empty the function inserted 
@@ -62,7 +62,7 @@ public class SortedLinkedListPriorityQueue<T> implements PriorityQueue<T> {
         */
        if(isEmpty()){
            
-           front = new ListNode<>(item,priority,front);
+           front = new ListNode<>(message,value,front);
            
         }else{
            
@@ -82,15 +82,15 @@ public class SortedLinkedListPriorityQueue<T> implements PriorityQueue<T> {
                if the nod priority number is lower the nod will be stored 
                after the nod with the higher priroity number.
                */
-               if(currentNode.priority < priority){
-                   front = new ListNode<>(item,priority,front.next);
+               if(currentNode.value < value){
+                   front = new ListNode<>(message,value,front.next);
                    break;
                 } // end if;
                /*
                this else if statment is check that the current node priority is
                higher thet priority of hte loacl node  
                */
-                else if(currentNode.priority > priority)
+                else if(currentNode.value > value)
                 {
                     /*
                     if statment what checking if the current nod nex is 
@@ -99,7 +99,7 @@ public class SortedLinkedListPriorityQueue<T> implements PriorityQueue<T> {
                     */
                     if(currentNode.next == null)
                     {
-                      currentNode.next = new ListNode<>(item,priority,currentNode.next);
+                      currentNode.next = new ListNode<>(message,value,currentNode.next);
                       break;
                       
                     } // end if;
@@ -109,8 +109,8 @@ public class SortedLinkedListPriorityQueue<T> implements PriorityQueue<T> {
                          another if statment what checking currentNode.next priroity
                          and similar it with hte priroity of the second nod .
                         */
-                      if(currentNode.next.getPriotiy() < priority){
-                          currentNode.next = new ListNode<>(item,priority,currentNode.next);
+                      if(currentNode.next.getTime() < value){
+                          currentNode.next = new ListNode<>(message,value,currentNode.next);
                       } //end if;
                      } // end esle;
                 } // end else if;
@@ -150,7 +150,7 @@ public class SortedLinkedListPriorityQueue<T> implements PriorityQueue<T> {
             {
                 result += ", ";
             }
-            result += node.getItem();
+            result += node.getMessage();
         }
         result += "]  isEmpty() =  " + isEmpty();
         if(!isEmpty())
@@ -158,7 +158,7 @@ public class SortedLinkedListPriorityQueue<T> implements PriorityQueue<T> {
             try {
                 result += ", head() = "  +head();
             } catch (QueueUnderflowException ex) {
-                Logger.getLogger(UnsortedLinkedListPriorityQueue.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(SortedLinkedListPriorityQueue.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         return result;
@@ -180,5 +180,8 @@ public class SortedLinkedListPriorityQueue<T> implements PriorityQueue<T> {
         
         return result;
     }
+
+   
     
 }
+
