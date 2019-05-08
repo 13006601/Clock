@@ -4,6 +4,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import javax.swing.*;
@@ -11,6 +13,7 @@ import java.util.Observer;
 import java.util.Observable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static javax.management.Query.value;
 import javax.swing.SpinnerDateModel;
 import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
@@ -96,7 +99,7 @@ public class View implements Observer{
         SpinnerDateModel sm =
         new SpinnerDateModel(date,null,null,Calendar.HOUR_OF_DAY);
         JSpinner spinner = new JSpinner(sm);
-        JSpinner.DateEditor de = new JSpinner.DateEditor(spinner,"HH:mm");
+        JSpinner.DateEditor de = new JSpinner.DateEditor(spinner," HH:mm yy/MM/dd");
         spinner.setEditor(de);
         int option = JOptionPane.showOptionDialog(null, spinner, "Add alarm time", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
         if (option == JOptionPane.CANCEL_OPTION){
@@ -108,42 +111,53 @@ public class View implements Observer{
             /**
              * On OK, message and time gets grabbed
              */
+         
            String message = JOptionPane.showInputDialog("Alarm message",JOptionPane.INFORMATION_MESSAGE);
            Date value = date;
+          Date sp = (Date)spinner.getValue();
              //value = (Date) ;
-                   
-          
-           int hours = value.getHours();
-           int minutes = value.getMinutes();
-           int day = value.getDay();
-           int month = value.getMonth();
+             LocalDate localDate = sp.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            int Month = localDate.getMonthValue();
+            int Day = localDate.getDayOfMonth();
+          System.out.println("spinner date is   : "+sp);
+           int hours = sp.getHours();
+           int minutes = sp.getMinutes();
+           int day = sp.getDay();
+           int month = sp.getMonth();
            System.out.println("Text is     "+message);
            Alarm alarm = new Alarm(hours, minutes, message);
            
-           int priority = alarm.epoch(Integer.toString(hours),Integer.toString(minutes),Integer.toString(day),Integer.toString(month));
-          
-            System.out.println("Date/Time entered by user is     "+value);
+           
+           System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+           
+            System.out.println(Integer.toString(hours)+" "+Integer.toString(minutes)+" "+Integer.toString(day)+" "+Integer.toString(Month));
+          int priority = alarm.epoch(Integer.toString(hours),Integer.toString(minutes),Integer.toString(day),Integer.toString(month));
+         
+
+            System.out.println("Date/Time entered by user is     "+sp);
             System.out.println("Hours are:    "+hours);
             System.out.println("Minutes are:    "+minutes);
-            System.out.println("Hours are:    "+day);
-            System.out.println("Minutes are:    "+month);
+            System.out.println("Day are:    "+Day);
+            System.out.println("Month are:    "+Month);
             
-
+            Date toMS;
+             toMS = sp;
+           
             Calendar calendar = Calendar.getInstance();
             calendar.setTime((Date) spinner.getValue());
            // System.out.println("Calendar - Time in milliseconds : " + calendar.getTimeInMillis());
-            int millis = (int) calendar.getTimeInMillis();
+            long millis = (long) toMS.getTime();
            System.out.println("Time in milliseconds:    "+millis);
           // System.out.println("Adding " + item.getItem() + " with priority " + priority);
           // q.add(item,priority);
-           
-          q.add(alarm,priority );
+           //int priority = Date toMS;
+          q.add(alarm,priority);
           
           //q.head();
           
           
           System.out.println("The head of the queue is :  "  + q.head().toString());
-          System.out.println("Date " +date);
+          System.out.println(alarm+","+priority);
            
            
 
