@@ -53,7 +53,7 @@ public class SortedLinkedListPriorityQueue<T> implements PriorityQueue<T> {
     to loves.
     */
     @Override
-    public void AddAlarm(T message, int value)
+    public void add(T message, int cal)
     {
         /*
          this if statement is checking if the queue is empty if it empty the function inserted 
@@ -62,7 +62,7 @@ public class SortedLinkedListPriorityQueue<T> implements PriorityQueue<T> {
         */
        if(isEmpty()){
            
-           front = new ListNode<>(message,value,front);
+           front = new ListNode<>(message,cal,front);
            
         }else{
            
@@ -82,15 +82,15 @@ public class SortedLinkedListPriorityQueue<T> implements PriorityQueue<T> {
                if the nod priority number is lower the nod will be stored 
                after the nod with the higher priroity number.
                */
-               if(currentNode.value < value){
-                   front = new ListNode<>(message,value,front.next);
+               if(currentNode.cal < cal){
+                   front = new ListNode<>(message,cal,front.next);
                    break;
                 } // end if;
                /*
                this else if statment is check that the current node priority is
                higher thet priority of hte loacl node  
                */
-                else if(currentNode.value > value)
+                else if(currentNode.cal > cal)
                 {
                     /*
                     if statment what checking if the current nod nex is 
@@ -99,7 +99,7 @@ public class SortedLinkedListPriorityQueue<T> implements PriorityQueue<T> {
                     */
                     if(currentNode.next == null)
                     {
-                      currentNode.next = new ListNode<>(message,value,currentNode.next);
+                      currentNode.next = new ListNode<>(message,cal,currentNode.next);
                       break;
                       
                     } // end if;
@@ -109,8 +109,8 @@ public class SortedLinkedListPriorityQueue<T> implements PriorityQueue<T> {
                          another if statment what checking currentNode.next priroity
                          and similar it with hte priroity of the second nod .
                         */
-                      if(currentNode.next.getTime() < value){
-                          currentNode.next = new ListNode<>(message,value,currentNode.next);
+                      if(currentNode.next.getTime() < cal){
+                          currentNode.next = new ListNode<>(message,cal,currentNode.next);
                       } //end if;
                      } // end esle;
                 } // end else if;
