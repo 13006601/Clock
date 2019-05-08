@@ -3,6 +3,7 @@ package clock;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import javax.swing.*;
@@ -19,7 +20,7 @@ public class View implements Observer{
     
     ClockPanel panel;
     JButton AddAlarm;
-    PriorityQueue<Alarm> q = new SortedLinkedListPriorityQueue<>(8);
+    AlarmQueue<Alarm> q = new SortedArrayPriorityQueue<>(8);
     
     public View(Model model) {
         JFrame frame = new JFrame();
@@ -63,7 +64,6 @@ public class View implements Observer{
         frame.setResizable(false);
         
         button.addActionListener(new ActionListener() {
-            
           
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -72,10 +72,11 @@ public class View implements Observer{
                     AddAlarm();
                 } catch (QueueOverflowException e) {
                     System.out.println("Add operation failed: " + e);
-                }
-
-                
-               
+                } catch (ParseException ex) {
+                    Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (QueueUnderflowException ex) {
+                    Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+                }   
             }
     
         });
@@ -88,46 +89,66 @@ public class View implements Observer{
         panel.repaint();
     }
     
-    public void AddAlarm() throws QueueOverflowException {
-       Date date = new Date();
+    public void AddAlarm() throws QueueOverflowException, ParseException, QueueUnderflowException {
+        
+       Date date = Calendar.getInstance().getTime();
+       System.out.println("Date is    "+date.toString());
         SpinnerDateModel sm =
         new SpinnerDateModel(date,null,null,Calendar.HOUR_OF_DAY);
         JSpinner spinner = new JSpinner(sm);
-        JSpinner.DateEditor de = new JSpinner.DateEditor(spinner,"dd/MMM HH:mm");
+        JSpinner.DateEditor de = new JSpinner.DateEditor(spinner,"HH:mm");
         spinner.setEditor(de);
         int option = JOptionPane.showOptionDialog(null, spinner, "Add alarm time", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
         if (option == JOptionPane.CANCEL_OPTION){
             // user hit cancel
         } else if (option == JOptionPane.OK_OPTION){
-            // user entered a number
-           String message = JOptionPane.showInputDialog("Alarm message",JOptionPane.INFORMATION_MESSAGE);
-           String value = spinner.getValue().toString();
-           //Integer.parseInt(spinner.getValue().toString());
-           //System.out.println(value);
-           ///System.out.println(message);
            
-         //  String text = message.substring(2, value.lastIndexOf(' '));
-           String text = message.toString();
-           System.out.println(text);
-           Alarm alarm = new Alarm(text);
-          // String P = String.parseInt(value.toString());
-          //Integer valueToInt = Integer.valueOf(value);
+            // user entered a number
+            
+            /**
+             * On OK, message and time gets grabbed
+             */
+           String message = JOptionPane.showInputDialog("Alarm message",JOptionPane.INFORMATION_MESSAGE);
+           Date value = date;
+             //value = (Date) ;
+                   
           
-            System.out.println(value);
-            System.out.println("Date - Time in milliseconds : " + date.getTime());
+           int hours = value.getHours();
+           int minutes = value.getMinutes();
+           int day = value.getDay();
+           int month = value.getMonth();
+           System.out.println("Text is     "+message);
+           Alarm alarm = new Alarm(hours, minutes, message);
+           
+           int priority = alarm.epoch(Integer.toString(hours),Integer.toString(minutes),Integer.toString(day),Integer.toString(month));
+          
+            System.out.println("Date/Time entered by user is     "+value);
+            System.out.println("Hours are:    "+hours);
+            System.out.println("Minutes are:    "+minutes);
+            System.out.println("Hours are:    "+day);
+            System.out.println("Minutes are:    "+month);
+            
 
             Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-            System.out.println("Calendar - Time in milliseconds : " + calendar.getTimeInMillis());
-            Integer cal = Integer.parseInt(calendar.getTimeInMillis());
-
-           System.out.println("Adding " + alarm.getAlarm() + " with priority " + value);
-           q.add(alarm,cal);
+            calendar.setTime((Date) spinner.getValue());
+           // System.out.println("Calendar - Time in milliseconds : " + calendar.getTimeInMillis());
+            int millis = (int) calendar.getTimeInMillis();
+           System.out.println("Time in milliseconds:    "+millis);
+          // System.out.println("Adding " + item.getItem() + " with priority " + priority);
+          // q.add(item,priority);
            
+          q.add(alarm,priority );
+          
+          //q.head();
+          
+          
+          System.out.println("The head of the queue is :  "  + q.head().toString());
+          System.out.println("Date " +date);
            
            
 
         }
+
         /*
         System.currentTimeMillis();
         SimpleDateModel formatter= new SimpleDateModel("yyyy-MM-dd 'at' HH:mm:ss z");  
