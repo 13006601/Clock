@@ -8,6 +8,8 @@ import java.util.Date;
 import javax.swing.*;
 import java.util.Observer;
 import java.util.Observable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.SpinnerDateModel;
 import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
@@ -58,6 +60,7 @@ public class View implements Observer{
         
         frame.pack();
         frame.setVisible(true);
+        frame.setResizable(false);
         
         button.addActionListener(new ActionListener() {
             
@@ -65,7 +68,11 @@ public class View implements Observer{
             @Override
             public void actionPerformed(ActionEvent ae) {
                
-                AddAlarm();
+                try {
+                    AddAlarm();
+                } catch (QueueOverflowException e) {
+                    System.out.println("Add operation failed: " + e);
+                }
 
                 
                
@@ -81,12 +88,12 @@ public class View implements Observer{
         panel.repaint();
     }
     
-    public void AddAlarm() {
-        Date date = new Date();
+    public void AddAlarm() throws QueueOverflowException {
+       Date date = new Date();
         SpinnerDateModel sm =
         new SpinnerDateModel(date,null,null,Calendar.HOUR_OF_DAY);
         JSpinner spinner = new JSpinner(sm);
-        JSpinner.DateEditor de = new JSpinner.DateEditor(spinner,"dd/MM HH:mm");
+        JSpinner.DateEditor de = new JSpinner.DateEditor(spinner,"dd/MMM HH:mm");
         spinner.setEditor(de);
         int option = JOptionPane.showOptionDialog(null, spinner, "Add alarm time", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
         if (option == JOptionPane.CANCEL_OPTION){
@@ -95,6 +102,7 @@ public class View implements Observer{
             // user entered a number
            String message = JOptionPane.showInputDialog("Alarm message",JOptionPane.INFORMATION_MESSAGE);
            String value = spinner.getValue().toString();
+           //Integer.parseInt(spinner.getValue().toString());
            //System.out.println(value);
            ///System.out.println(message);
            
@@ -103,18 +111,28 @@ public class View implements Observer{
            System.out.println(text);
            Alarm alarm = new Alarm(text);
           // String P = String.parseInt(value.toString());
-          String valueToString = String.valueOf(value);
+          //Integer valueToInt = Integer.valueOf(value);
           
+            System.out.println(value);
+            System.out.println("Date - Time in milliseconds : " + date.getTime());
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            System.out.println("Calendar - Time in milliseconds : " + calendar.getTimeInMillis());
+            Integer cal = Integer.parseInt(calendar.getTimeInMillis());
+
            System.out.println("Adding " + alarm.getAlarm() + " with priority " + value);
-          /* try {
-                    q.add(alarm, value);
-                } catch (QueueOverflowException e) {
-                    
-                    System.out.println("Add operation failed: " + e);
-                }
-*/
+           q.add(alarm,cal);
+           
+           
+           
+
         }
-        
-        
+        /*
+        System.currentTimeMillis();
+        SimpleDateModel formatter= new SimpleDateModel("yyyy-MM-dd 'at' HH:mm:ss z");  
+        Date date = new Date(System.currentTimeMillis());  
+        System.out.println(formatter.format(date)); 
+*/
     }
 }  
