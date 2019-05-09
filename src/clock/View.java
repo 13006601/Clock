@@ -11,6 +11,7 @@ import java.util.Date;
 import javax.swing.*;
 import java.util.Observer;
 import java.util.Observable;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static javax.management.Query.value;
@@ -23,7 +24,7 @@ public class View implements Observer{
     
     ClockPanel panel;
     JButton AddAlarm;
-    AlarmQueue<Alarm> q = new SortedArrayPriorityQueue<>(8);
+    AlarmQueue<Alarm> q = new SortedArrayPriorityQueue<>(30);
     
     public View(Model model) {
         JFrame frame = new JFrame();
@@ -95,6 +96,7 @@ public class View implements Observer{
     public void AddAlarm() throws QueueOverflowException, ParseException, QueueUnderflowException {
         
        Date date = Calendar.getInstance().getTime();
+       System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
        System.out.println("Date is    "+date.toString());
         SpinnerDateModel sm =
         new SpinnerDateModel(date,null,null,Calendar.HOUR_OF_DAY);
@@ -114,24 +116,24 @@ public class View implements Observer{
          
            String message = JOptionPane.showInputDialog("Alarm message",JOptionPane.INFORMATION_MESSAGE);
            Date value = date;
-          Date sp = (Date)spinner.getValue();
+           Date sp = (Date)spinner.getValue();
              //value = (Date) ;
-             LocalDate localDate = sp.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+           LocalDate localDate = sp.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             int Month = localDate.getMonthValue();
             int Day = localDate.getDayOfMonth();
           System.out.println("spinner date is   : "+sp);
            int hours = sp.getHours();
            int minutes = sp.getMinutes();
-           int day = sp.getDay();
-           int month = sp.getMonth();
+           //int day = sp.getDay();
+           //int month = sp.getMonth();
            System.out.println("Text is     "+message);
-           Alarm alarm = new Alarm(hours, minutes, message);
-           
+           Alarm alarm = new Alarm(hours, minutes, Day, Month, message);
+           //int priority = Integer.parseInt(input.substring(input.lastIndexOf(' ') + 1));
            
            System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
            
-            System.out.println(Integer.toString(hours)+" "+Integer.toString(minutes)+" "+Integer.toString(day)+" "+Integer.toString(Month));
-          int priority = alarm.epoch(Integer.toString(hours),Integer.toString(minutes),Integer.toString(day),Integer.toString(month));
+           System.out.println(Integer.toString(hours)+" "+Integer.toString(minutes)+" "+Integer.toString(Day)+" "+Integer.toString(Month));
+           int priority = alarm.epoch(Integer.toString(hours),Integer.toString(minutes),Integer.toString(Day),Integer.toString(Month));
          
 
             System.out.println("Date/Time entered by user is     "+sp);
@@ -158,7 +160,7 @@ public class View implements Observer{
           
           System.out.println("The head of the queue is :  "  + q.head().toString());
           System.out.println(alarm+","+priority);
-           
+          System.out.println("The whole queue order is - -" + q); 
            
 
         }
@@ -169,5 +171,19 @@ public class View implements Observer{
         Date date = new Date(System.currentTimeMillis());  
         System.out.println(formatter.format(date)); 
 */
+    }
+    
+    public void AlarmTrigger(long millis){
+        DateTime dt = Calendar.getInstance().getTime();
+        int currentHours = dt.getHourOfDay(); 
+        int vurrentMinutes = dt.getMinutesOfHour();
+        long hours = TimeUnit.MILLISECONDS.toMinutes(millis);
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(millis);
+        
+        boolean alarmTime =  alarm.epoch(Integer.toString(hours),Integer.toString(minutes));
+        
+        if( == alarmTime){
+            JOptionPane.showMessageDialog(null,"Alarm Alarm");
+}
     }
 }  
