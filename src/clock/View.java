@@ -150,7 +150,7 @@ public class View implements Observer{
            // System.out.println("Calendar - Time in milliseconds : " + calendar.getTimeInMillis());
             long millis = (long) toMS.getTime();
            System.out.println("Time in milliseconds:    "+millis);
-          // System.out.println("Adding " + item.getItem() + " with priority " + priority);
+          //System.out.println("Adding " + AlarmTime.getItem() + " with priority " + priority);
           // q.add(item,priority);
            //int priority = Date toMS;
           q.add(alarm,priority);
@@ -173,17 +173,29 @@ public class View implements Observer{
 */
     }
     
-    public void AlarmTrigger(long millis){
-        DateTime dt = Calendar.getInstance().getTime();
-        int currentHours = dt.getHourOfDay(); 
-        int vurrentMinutes = dt.getMinutesOfHour();
-        long hours = TimeUnit.MILLISECONDS.toMinutes(millis);
-        long minutes = TimeUnit.MILLISECONDS.toMinutes(millis);
+    public void AlarmTrigger() throws QueueUnderflowException{
         
-        boolean alarmTime =  alarm.epoch(Integer.toString(hours),Integer.toString(minutes));
+        /*
         
-        if( == alarmTime){
-            JOptionPane.showMessageDialog(null,"Alarm Alarm");
-}
-    }
+       int priority = ;
+       
+       System.out.print(priority);
+        */
+        
+        Date dt = Calendar.getInstance().getTime();
+        int currentHours = dt.getHours();
+        int currentMinutes = dt.getMinutes();
+        long millisecond =  ;
+        long hours = TimeUnit.MILLISECONDS.toHours(millisecond);
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(millisecond);
+        
+        if( hours == currentHours && minutes == currentMinutes){
+            JOptionPane.showMessageDialog(null,q);
+            q.remove();
+
+        }
+
+
+   }
+    
 }  
