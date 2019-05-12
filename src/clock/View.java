@@ -24,6 +24,7 @@ public class View implements Observer{
     
     ClockPanel panel;
     JButton AddAlarm;
+    int priority, hours, minutes, currhrs, currmins;
     AlarmQueue<Alarm> q = new SortedArrayPriorityQueue<>(30);
     
     public View(Model model) {
@@ -91,6 +92,40 @@ public class View implements Observer{
     @Override
     public void update(Observable o, Object arg) {
         panel.repaint();
+      
+        try {
+                checkTime();
+            
+        } catch (QueueUnderflowException ex) {
+            Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+    }
+    
+    public void checkTime() throws QueueUnderflowException{
+       Date date = Calendar.getInstance().getTime();
+        //currhrs = date.getHours();
+        //currmins = date.getMinutes();
+        //int curMth = date.getMonth();
+        //int curYr = date.getYear();
+
+        //Alarm.epoch(currhrs, currmins, curMth, curYr) // Call epoch to get Long date time value 
+        long t = date.getTime();
+        
+        //int epoch = (int)t/1000;
+        
+       //if((currhrs == hours)&&(currmins == minutes)){
+        System.out.print(q.isEmpty());
+          if(!q.isEmpty()){
+            try {
+                System.out.println("Epoch :"+t/1000+"\n Pri :"+q.RtnPriority()+"\n"); // TESTOUTPUT Epoch and priority
+                if(t/1000 == q.RtnPriority()){ // if epoch time == priority (Datetime in number) then 
+                    
+                    AlarmTrigger(); // trigger alarm
+                }
+            } catch (QueueUnderflowException ex) {
+                Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+          }
+        }
     }
     
     public void AddAlarm() throws QueueOverflowException, ParseException, QueueUnderflowException {
@@ -122,8 +157,8 @@ public class View implements Observer{
             int Month = localDate.getMonthValue();
             int Day = localDate.getDayOfMonth();
           System.out.println("spinner date is   : "+sp);
-           int hours = sp.getHours();
-           int minutes = sp.getMinutes();
+           hours = sp.getHours();
+           minutes = sp.getMinutes();
            //int day = sp.getDay();
            //int month = sp.getMonth();
            System.out.println("Text is     "+message);
@@ -133,7 +168,7 @@ public class View implements Observer{
            System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
            
            System.out.println(Integer.toString(hours)+" "+Integer.toString(minutes)+" "+Integer.toString(Day)+" "+Integer.toString(Month));
-           int priority = alarm.epoch(Integer.toString(hours),Integer.toString(minutes),Integer.toString(Day),Integer.toString(Month));
+           priority = alarm.epoch(Integer.toString(hours),Integer.toString(minutes),Integer.toString(Day),Integer.toString(Month));
          
 
             System.out.println("Date/Time entered by user is     "+sp);
@@ -173,27 +208,47 @@ public class View implements Observer{
 */
     }
     
-    public void AlarmTrigger() throws QueueUnderflowException{
+    /**
+     *
+     * @throws QueueUnderflowException
+     * @throws clock.AlarmQueue
+     * @throws clock.AlarmQueue
+     * @throws clock.AlarmQueue
+     * @throws clock.AlarmQueue
+     * @throws clock.AlarmQueue
+     * @throws clock.AlarmQueue
+     * @throws AlarmQueue
+     */
+    public void AlarmTrigger() throws QueueUnderflowException {
         
+         JOptionPane.showMessageDialog(null,q);
+        q.remove();
+        System.out.println(q.toString());
         /*
         
        int priority = ;
        
-       System.out.print(priority);
+       System.out.print(priority); 
         */
-        
+        //q.remove();
         Date dt = Calendar.getInstance().getTime();
-        int currentHours = dt.getHours();
-        int currentMinutes = dt.getMinutes();
-        long millisecond =  ;
-        long hours = TimeUnit.MILLISECONDS.toHours(millisecond);
-        long minutes = TimeUnit.MILLISECONDS.toMinutes(millisecond);
+      //  int currentHours = dt.getHours();
+      //  int currentMinutes = dt.getMinutes();
+       // int priority = 0;
+        //long hours = TimeUnit.MILLISECONDS.toHours(priority);
+       // long minutes = TimeUnit.MILLISECONDS.toMinutes(priority);
         
-        if( hours == currentHours && minutes == currentMinutes){
+      /*  if( hours == currentHours && minutes == currentMinutes){
             JOptionPane.showMessageDialog(null,q);
             q.remove();
 
         }
+       q.remove();
+        */
+       // if(priority == (int) dt.getTime() ){
+            //System.out.println("trigger alarm");
+            //q.remove();
+        //}
 
 
    }
