@@ -11,20 +11,19 @@ import java.util.Date;
 import javax.swing.*;
 import java.util.Observer;
 import java.util.Observable;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static javax.management.Query.value;
 import javax.swing.SpinnerDateModel;
 import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
-import javax.swing.JPanel;
 
 public class View implements Observer{
     
     ClockPanel panel;
     JButton AddAlarm;
+    JButton RemoveAlarm;
     int priority, hours, minutes, currhrs, currmins;
+    String message;
     AlarmQueue<Alarm> q = new SortedArrayPriorityQueue<>(30);
     
     public View(Model model) {
@@ -86,7 +85,17 @@ public class View implements Observer{
     
         });
         
-        
+        button3.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                
+                try { 
+                    RemoveAlarm();
+                } catch (QueueUnderflowException ex) {
+                    Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }  
+    });
     }
     
     @Override
@@ -103,17 +112,10 @@ public class View implements Observer{
     
     public void checkTime() throws QueueUnderflowException{
        Date date = Calendar.getInstance().getTime();
-        //currhrs = date.getHours();
-        //currmins = date.getMinutes();
-        //int curMth = date.getMonth();
-        //int curYr = date.getYear();
 
         //Alarm.epoch(currhrs, currmins, curMth, curYr) // Call epoch to get Long date time value 
         long t = date.getTime();
         
-        //int epoch = (int)t/1000;
-        
-       //if((currhrs == hours)&&(currmins == minutes)){
         System.out.print(q.isEmpty());
           if(!q.isEmpty()){
             try {
@@ -152,18 +154,15 @@ public class View implements Observer{
            String message = JOptionPane.showInputDialog("Alarm message",JOptionPane.INFORMATION_MESSAGE);
            Date value = date;
            Date sp = (Date)spinner.getValue();
-             //value = (Date) ;
            LocalDate localDate = sp.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             int Month = localDate.getMonthValue();
             int Day = localDate.getDayOfMonth();
           System.out.println("spinner date is   : "+sp);
            hours = sp.getHours();
            minutes = sp.getMinutes();
-           //int day = sp.getDay();
-           //int month = sp.getMonth();
+     
            System.out.println("Text is     "+message);
            Alarm alarm = new Alarm(hours, minutes, Day, Month, message);
-           //int priority = Integer.parseInt(input.substring(input.lastIndexOf(' ') + 1));
            
            System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
            
@@ -182,15 +181,9 @@ public class View implements Observer{
            
             Calendar calendar = Calendar.getInstance();
             calendar.setTime((Date) spinner.getValue());
-           // System.out.println("Calendar - Time in milliseconds : " + calendar.getTimeInMillis());
             long millis = (long) toMS.getTime();
            System.out.println("Time in milliseconds:    "+millis);
-          //System.out.println("Adding " + AlarmTime.getItem() + " with priority " + priority);
-          // q.add(item,priority);
-           //int priority = Date toMS;
           q.add(alarm,priority);
-          
-          //q.head();
           
           
           System.out.println("The head of the queue is :  "  + q.head().toString());
@@ -199,58 +192,24 @@ public class View implements Observer{
            
 
         }
-
-        /*
-        System.currentTimeMillis();
-        SimpleDateModel formatter= new SimpleDateModel("yyyy-MM-dd 'at' HH:mm:ss z");  
-        Date date = new Date(System.currentTimeMillis());  
-        System.out.println(formatter.format(date)); 
-*/
     }
     
-    /**
-     *
-     * @throws QueueUnderflowException
-     * @throws clock.AlarmQueue
-     * @throws clock.AlarmQueue
-     * @throws clock.AlarmQueue
-     * @throws clock.AlarmQueue
-     * @throws clock.AlarmQueue
-     * @throws clock.AlarmQueue
-     * @throws AlarmQueue
-     */
     public void AlarmTrigger() throws QueueUnderflowException {
         
-         JOptionPane.showMessageDialog(null,q);
+         JOptionPane.showMessageDialog(null,message);
         q.remove();
         System.out.println(q.toString());
-        /*
-        
-       int priority = ;
        
-       System.out.print(priority); 
-        */
-        //q.remove();
         Date dt = Calendar.getInstance().getTime();
-      //  int currentHours = dt.getHours();
-      //  int currentMinutes = dt.getMinutes();
-       // int priority = 0;
-        //long hours = TimeUnit.MILLISECONDS.toHours(priority);
-       // long minutes = TimeUnit.MILLISECONDS.toMinutes(priority);
-        
-      /*  if( hours == currentHours && minutes == currentMinutes){
-            JOptionPane.showMessageDialog(null,q);
-            q.remove();
-
-        }
-       q.remove();
-        */
-       // if(priority == (int) dt.getTime() ){
-            //System.out.println("trigger alarm");
-            //q.remove();
-        //}
-
-
    }
-    
+    public void RemoveAlarm() throws QueueUnderflowException{
+            JList list = new JList((ListModel) q.head()); //data has type Object[]
+            list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+            list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+            list.setVisibleRowCount(-1);
+
+            JScrollPane listScroller = new JScrollPane(list);
+            listScroller.setPreferredSize(new Dimension(250, 80));
+            q.remove();
+        }
 }  
