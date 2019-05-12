@@ -84,7 +84,7 @@ public class View implements Observer{
             }
     
         });
-        
+        /*
         button3.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -95,7 +95,7 @@ public class View implements Observer{
                     Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }  
-    });
+    });*/
     }
     
     @Override
@@ -134,7 +134,7 @@ public class View implements Observer{
         
        Date date = Calendar.getInstance().getTime();
        System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-       System.out.println("Date is    "+date.toString());
+       //System.out.println("Date is    "+date.toString());
         SpinnerDateModel sm =
         new SpinnerDateModel(date,null,null,Calendar.HOUR_OF_DAY);
         JSpinner spinner = new JSpinner(sm);
@@ -157,7 +157,7 @@ public class View implements Observer{
            LocalDate localDate = sp.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             int Month = localDate.getMonthValue();
             int Day = localDate.getDayOfMonth();
-          System.out.println("spinner date is   : "+sp);
+          //System.out.println("spinner date is   : "+sp);
            hours = sp.getHours();
            minutes = sp.getMinutes();
      
@@ -170,11 +170,11 @@ public class View implements Observer{
            priority = alarm.epoch(Integer.toString(hours),Integer.toString(minutes),Integer.toString(Day),Integer.toString(Month));
          
 
-            System.out.println("Date/Time entered by user is     "+sp);
-            System.out.println("Hours are:    "+hours);
-            System.out.println("Minutes are:    "+minutes);
-            System.out.println("Day are:    "+Day);
-            System.out.println("Month are:    "+Month);
+            //System.out.println("Date/Time entered by user is     "+sp);
+            //System.out.println("Hours are:    "+hours);
+            //System.out.println("Minutes are:    "+minutes);
+            //System.out.println("Day are:    "+Day);
+            //System.out.println("Month are:    "+Month);
             
             Date toMS;
              toMS = sp;
@@ -184,10 +184,9 @@ public class View implements Observer{
             long millis = (long) toMS.getTime();
            System.out.println("Time in milliseconds:    "+millis);
           q.add(alarm,priority);
-          
-          
-          System.out.println("The head of the queue is :  "  + q.head().toString());
-          System.out.println(alarm+","+priority);
+         
+          //System.out.println("The head of the queue is :  "  + q.head().toString());
+         //System.out.println(alarm+","+priority);
           System.out.println("The whole queue order is - -" + q); 
            
 
@@ -196,12 +195,13 @@ public class View implements Observer{
     
     public void AlarmTrigger() throws QueueUnderflowException {
         
-         JOptionPane.showMessageDialog(null,message);
+        JOptionPane.showMessageDialog(null,message);
         q.remove();
         System.out.println(q.toString());
        
         Date dt = Calendar.getInstance().getTime();
    }
+    
     public void RemoveAlarm() throws QueueUnderflowException{
             JList list = new JList((ListModel) q.head()); //data has type Object[]
             list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
