@@ -84,7 +84,7 @@ public class View implements Observer{
             }
     
         });
-        
+        /*
         button3.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -95,7 +95,7 @@ public class View implements Observer{
                     Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }  
-    });
+    });*/
     }
     
     @Override
@@ -151,7 +151,7 @@ public class View implements Observer{
              * On OK, message and time gets grabbed
              */
          
-           String message = JOptionPane.showInputDialog("Alarm message",JOptionPane.INFORMATION_MESSAGE);
+           message = JOptionPane.showInputDialog("Alarm message",JOptionPane.INFORMATION_MESSAGE);
            Date value = date;
            Date sp = (Date)spinner.getValue();
            LocalDate localDate = sp.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -163,7 +163,7 @@ public class View implements Observer{
      
            System.out.println("Text is     "+message);
            Alarm alarm = new Alarm(hours, minutes, Day, Month, message);
-           
+           System.out.println("Alarm details: " + message);
            System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
            
            System.out.println(Integer.toString(hours)+" "+Integer.toString(minutes)+" "+Integer.toString(Day)+" "+Integer.toString(Month));
@@ -183,18 +183,20 @@ public class View implements Observer{
             calendar.setTime((Date) spinner.getValue());
             long millis = (long) toMS.getTime();
            System.out.println("Time in milliseconds:    "+millis);
+           
+           
           q.add(alarm,priority);
          
           //System.out.println("The head of the queue is :  "  + q.head().toString());
          //System.out.println(alarm+","+priority);
           System.out.println("The whole queue order is - -" + q); 
-           
+          System.out.println("Alarm details: " + message); 
 
         }
     }
     
     public void AlarmTrigger() throws QueueUnderflowException {
-        
+        System.out.println("Alarm details: " + message);
         JOptionPane.showMessageDialog(null,message);
         q.remove();
         System.out.println(q.toString());
@@ -206,9 +208,9 @@ public class View implements Observer{
             JList list = new JList(); //data has type Object[]
             
             //loop through storage, add item x to list; draw list
-            for(int x = 0; x < q.storage  ; x++){
+            for(int x = 0; x < q.storage.length; x++){
                 
-                list.add(q)
+                list.add(q);
             }
             
             list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
