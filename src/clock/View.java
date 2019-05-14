@@ -211,7 +211,9 @@ public class View implements Observer{
            Alarm alarm = new Alarm(hours, minutes, Day, Month, message);
            //System.out.println("Alarm details: " + message);
            System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-           
+           /**
+            * Out put represent alarm details 
+            */
            System.out.println(Integer.toString(hours)+" "+Integer.toString(minutes)+" "+Integer.toString(Day)+" "+Integer.toString(Month));
            priority = alarm.epoch(Integer.toString(hours),Integer.toString(minutes),Integer.toString(Day),Integer.toString(Month));
             
@@ -228,15 +230,32 @@ public class View implements Observer{
 
         }
     }
-    
+    /**
+     * Alarm trigger when check time function find the alarm item what time is 
+     * similar to current time, message dialog with the alarm message will appear
+     * and the alarm will be removed
+     * @throws QueueUnderflowException 
+     */
     public void AlarmTrigger() throws QueueUnderflowException {
         JOptionPane.showMessageDialog(null,message);
         q.remove();
-        System.out.println(q.toString());
-       
+        //System.out.println(q.toString());
         Date dt = Calendar.getInstance().getTime();
    }
-    
+    /**
+     * This is the remove alarm function
+     * this function is checking if it is any alarm in the priority queue
+     * if there is no alarm then message dialog will appear
+     * with message "No alarms Exists"
+     * else it will show a JCombo Box with the list of all existed in the sorted array priority items
+     * after user pick one and our button remove alarm alarm will be removed form the priority queue
+     * if there is no alarm left after alarm removed the message box will say that there is No alarm exists
+     * this method is not perfect, because if there is more then one alarm it will be not removed form the list
+     * plus the id of the alarm will be add to the list, but if you will close the box and open it again
+     * it will show a correct result
+     * @throws QueueUnderflowException
+     * @throws NullPointerException 
+     */
     public void RemoveAlarm() throws QueueUnderflowException, NullPointerException{
             //loop through storage, add item x to list; draw list
             if(q.isEmpty()){
@@ -279,6 +298,15 @@ public class View implements Observer{
                    comboFrame.setVisible(true); 
             }
     }
+    /**
+     * Update alarm function, I just combine remove alarm and add alarm methods into this. 
+     * It not very well because after you remove alarm jspinner will appear to all you add the new one 
+     * but the combo box for the alarm removing still will be exist on the screen, you need to close it by your salve
+     * but technically   this function allow you to update the alarms priority queue by remove one alarm and add another one. 
+     * @throws QueueUnderflowException
+     * @throws NullPointerException
+     * @throws QueueOverflowException 
+     */
     public void UpdateAlarm()throws QueueUnderflowException, NullPointerException, QueueOverflowException{
             //loop through storage, add item x to list; draw list
             if(q.isEmpty()){
