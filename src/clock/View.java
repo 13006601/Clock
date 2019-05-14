@@ -22,6 +22,7 @@ public class View implements Observer{
     ClockPanel panel;
     JButton AddAlarm;
     JButton RemoveAlarm;
+    JButton UpdateAlarm;
     int hours, minutes, currhrs, currmins;
     long priority;
     String message;
@@ -30,7 +31,6 @@ public class View implements Observer{
     public View(Model model) {
         JFrame frame = new JFrame();
         panel = new ClockPanel(model);
-        //frame.setContentPane(panel);
         frame.setTitle("Java Clock");
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -53,7 +53,7 @@ public class View implements Observer{
         panel.setPreferredSize(new Dimension(200, 200));
         pane.add(panel, BorderLayout.PAGE_START);
          
-       JButton button2 = new JButton("Update");
+        JButton button2 = new JButton("Update");
         pane.add(button2, BorderLayout.CENTER);
          
         JButton button3 = new JButton("Delete");
@@ -72,7 +72,6 @@ public class View implements Observer{
           
             @Override
             public void actionPerformed(ActionEvent ae) {
-               
                 try {
                     AddAlarm();
                 } catch (QueueOverflowException e) {
@@ -89,7 +88,6 @@ public class View implements Observer{
         button3.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ae) {
-                
                 try { 
                     RemoveAlarm();
                 } catch (QueueUnderflowException ex) {
@@ -97,6 +95,14 @@ public class View implements Observer{
                 }
             }  
     });
+        
+         button2.addActionListener(new ActionListener() {
+          
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                UpdateAlarm();
+            }
+        });
     }
     
     @Override
@@ -135,7 +141,6 @@ public class View implements Observer{
         
        Date date = Calendar.getInstance().getTime();
        System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-       //System.out.println("Date is    "+date.toString());
         SpinnerDateModel sm =
         new SpinnerDateModel(date,null,null,Calendar.HOUR_OF_DAY);
         JSpinner spinner = new JSpinner(sm);
@@ -158,7 +163,6 @@ public class View implements Observer{
            LocalDate localDate = sp.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             int Month = localDate.getMonthValue();
             int Day = localDate.getDayOfMonth();
-          //System.out.println("spinner date is   : "+sp);
            hours = sp.getHours();
            minutes = sp.getMinutes();
      
@@ -169,13 +173,6 @@ public class View implements Observer{
            
            System.out.println(Integer.toString(hours)+" "+Integer.toString(minutes)+" "+Integer.toString(Day)+" "+Integer.toString(Month));
            priority = alarm.epoch(Integer.toString(hours),Integer.toString(minutes),Integer.toString(Day),Integer.toString(Month));
-         
-
-            //System.out.println("Date/Time entered by user is     "+sp);
-            //System.out.println("Hours are:    "+hours);
-            //System.out.println("Minutes are:    "+minutes);
-            //System.out.println("Day are:    "+Day);
-            //System.out.println("Month are:    "+Month);
             
             Date toMS;
              toMS = sp;
@@ -187,9 +184,6 @@ public class View implements Observer{
            
            
           q.add(alarm, priority);
-         
-          //System.out.println("The head of the queue is :  "  + q.head().toString());
-         //System.out.println(alarm+","+priority);
           System.out.println("The whole queue order is - -" + q); 
           System.out.println("Alarm details: " + message); 
 
@@ -205,29 +199,16 @@ public class View implements Observer{
    }
     
     public void RemoveAlarm() throws QueueUnderflowException, NullPointerException{
-
             //loop through storage, add item x to list; draw list
-
-
             if(q.isEmpty()){
-                                   
-
              JOptionPane.showMessageDialog(null,"No Alarms Exist");
             }
             else{
-                
-                    // JList list = new JList(); //data has type Object[]
                     JFrame comboFrame = new JFrame();
-                    //Container pane = comboFrame.
                     comboFrame.setTitle("Alarm Removal");
                     comboFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
                  System.out.println(" q to string is:   "+q.toString());
-                    //Date d = new Date(q.toString().split("-"));
-                    //String alarms[] = ;
-                    
-                    //System.out.println(alarms.length);
-                   // String arr[] = q.toString().split(",");
                     
                     final JComboBox combo = new JComboBox(q.GetAlarms());
                     final JButton btnRemove = new JButton("Remove Alarm");
@@ -250,25 +231,55 @@ public class View implements Observer{
                             } catch (QueueUnderflowException ex) {
                                 Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
                             }
-                            
                         }
-
                     });
                    comboFrame.setPreferredSize(new Dimension(200, 100));
                    comboFrame.add(combo,BorderLayout.CENTER);
                    comboFrame.pack();
                    comboFrame.add(btnRemove,BorderLayout.SOUTH);
-                   comboFrame.setVisible(true);
-                  
-                 /*
-                int option = JOptionPane.showOptionDialog(null, pane, "Remove alarm", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
-                if (option == JOptionPane.CANCEL_OPTION){
-                    // user hit cancel
-                } else if (option == JOptionPane.OK_OPTION){
-                    q.remove();
-                   }*/
+                   comboFrame.setVisible(true); 
             }
-   
-
     }
+    public void UpdateAlarm (){
+           
+            if(q.isEmpty()){
+                
+             JOptionPane.showMessageDialog(null,"No Alarms Exist");
+             
+            }
+            else{
+                    JFrame comboFrame = new JFrame();
+                    comboFrame.setTitle("Alarm Removal");
+                    comboFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+                 System.out.println(" q to string is:   "+q.toString());
+                    
+                    final JComboBox combo = new JComboBox(q.GetAlarms());
+                    final JButton btnRemove = new JButton("Remove Alarm");
+                    btnRemove.addActionListener(new ActionListener() {
+          
+                        @Override
+                        public void actionPerformed(ActionEvent ae) {
+                            try {
+                                int sel = combo.getSelectedIndex();
+                                System.out.println(sel);
+                                q.removeSelAlarm(sel);
+                                if(!q.isEmpty()){
+                                    combo.addItem(q.GetAlarms());
+                                }else{
+                                    JOptionPane.showMessageDialog(null,"No Alarms Exist");
+                                    combo.removeAllItems();
+                                }
+                            } catch (QueueUnderflowException ex) {
+                                Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+                    });
+                   comboFrame.setPreferredSize(new Dimension(200, 100));
+                   comboFrame.add(combo,BorderLayout.CENTER);
+                   comboFrame.pack();
+                   comboFrame.add(btnRemove,BorderLayout.SOUTH);
+                   comboFrame.setVisible(true); 
+            }
+       }
 } 
