@@ -100,7 +100,13 @@ public class View implements Observer{
           
             @Override
             public void actionPerformed(ActionEvent ae) {
-                UpdateAlarm();
+                try {
+                    UpdateAlarm();
+                } catch (QueueUnderflowException ex) {
+                    Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (NullPointerException ex) {
+                    Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
@@ -108,7 +114,6 @@ public class View implements Observer{
     @Override
     public void update(Observable o, Object arg) {
         panel.repaint();
-      
         try {
                 checkTime();
             
@@ -240,7 +245,7 @@ public class View implements Observer{
                    comboFrame.setVisible(true); 
             }
     }
-    public void UpdateAlarm (){
+    public void UpdateAlarm()throws QueueUnderflowException, NullPointerException{
            
             if(q.isEmpty()){
                 
