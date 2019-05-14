@@ -69,8 +69,17 @@ public class View implements Observer{
         
         frame.pack();
         frame.setVisible(true);
+        /**
+         * I make a Graphical User Interface window not resizable  
+         * just not allow user to brake visual after resize the window. 
+         */
         frame.setResizable(false);
-        
+        /**
+         * Action listener for the button one (Add) 
+         * hold the function Add Alarm
+         * catch QueueOverflowException
+         * catch ParseExeption and QueueUnderflowException
+         */
         button.addActionListener(new ActionListener() {
           
             @Override
@@ -85,7 +94,11 @@ public class View implements Observer{
             }
     
         });
-        
+        /**
+         * Action listener for the button 3 (Delete)
+         * hold the function Remove Alarm
+         * catch QueueUnderflowException
+         */
         button3.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -95,8 +108,12 @@ public class View implements Observer{
                     Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }  
-    });
-        
+         });
+        /**
+         * Action listener for the button 2 (Update)
+         * hold the function Update Alarm
+         * catch QueueUnderfloeException,NullPointerExeption and QueueOverflowExpection
+         */
          button2.addActionListener(new ActionListener() {
           
             @Override
@@ -109,7 +126,13 @@ public class View implements Observer{
             }
         });
     }
-    
+    /**
+     * update function for the repaint the clock panel.
+     * also, used for the check time function
+     * @param o
+     * @param arg 
+     * catch QueueUnderflowException
+     */
     @Override
     public void update(Observable o, Object arg) {
         panel.repaint();
@@ -120,19 +143,21 @@ public class View implements Observer{
             Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
         } 
     }
-    
+    /**
+     * check Time function
+     * this function is used to checking priority queue
+     * and finding matches between current time in milliseconds 
+     * and time of the alarm, when they the same run the alarm trigger
+     * @throws QueueUnderflowException 
+     */
     public void checkTime() throws QueueUnderflowException{
        Date date = Calendar.getInstance().getTime();
-
-        //Alarm.epoch(currhrs, currmins, curMth, curYr) // Call epoch to get Long date time value 
         long t = date.getTime();
-        
         System.out.print(q.isEmpty());
           if(!q.isEmpty()){
             try {
-                System.out.println("Epoch :"+t/1000+"\n Pri :"+q.RtnPriority()+"\n"); // TESTOUTPUT Epoch and priority
+                //System.out.println("Epoch :"+t/1000+"\n Pri :"+q.RtnPriority()+"\n"); // TESTOUTPUT Epoch and priority
                 if(t/1000 == q.RtnPriority()){ // if epoch time == priority (Datetime in number) then 
-                    
                     AlarmTrigger(); // trigger alarm
                 }
             } catch (QueueUnderflowException ex) {
@@ -140,11 +165,23 @@ public class View implements Observer{
           }
         }
     }
-    
+    /**
+     * Add alarm function this function make a new date with the calendar
+     * after function run it create JSpinner where user can choose a time and date
+     * after user press ok this data become a priority item and stored in the 
+     * sorted array
+     * if user press cancel spinner will close
+     * after user set time will appear option dialog box where user will be able to input an alarm message
+     * time of the alarm is converted into milliseconds to put it as a priority for sorted array 
+     * all the data form here is send to the Alarm class epoch
+     * @throws QueueOverflowException
+     * @throws ParseException
+     * @throws QueueUnderflowException 
+     */
     public void AddAlarm() throws QueueOverflowException, ParseException, QueueUnderflowException {
         
-       Date date = Calendar.getInstance().getTime();
-       System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        Date date = Calendar.getInstance().getTime();
+        //System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         SpinnerDateModel sm =
         new SpinnerDateModel(date,null,null,Calendar.HOUR_OF_DAY);
         JSpinner spinner = new JSpinner(sm);
@@ -170,9 +207,9 @@ public class View implements Observer{
            hours = sp.getHours();
            minutes = sp.getMinutes();
      
-           System.out.println("Text is     "+message);
+           //System.out.println("Text is     "+message);
            Alarm alarm = new Alarm(hours, minutes, Day, Month, message);
-           System.out.println("Alarm details: " + message);
+           //System.out.println("Alarm details: " + message);
            System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
            
            System.out.println(Integer.toString(hours)+" "+Integer.toString(minutes)+" "+Integer.toString(Day)+" "+Integer.toString(Month));
@@ -184,11 +221,9 @@ public class View implements Observer{
             Calendar calendar = Calendar.getInstance();
             calendar.setTime((Date) spinner.getValue());
             long millis = (long) toMS.getTime();
-           System.out.println("Time in milliseconds:    "+millis);
-           
-           
+           //System.out.println("Time in milliseconds:    "+millis);
           q.add(alarm, priority);
-          System.out.println("The whole queue order is - -" + q); 
+          //System.out.println("The whole queue order is - -" + q); 
           System.out.println("Alarm details: " + message); 
 
         }
