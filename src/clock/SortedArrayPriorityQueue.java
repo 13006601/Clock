@@ -1,5 +1,12 @@
 package clock;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * Implementation of the PriorityQueue ADT using a sorted array for storage.
  *
@@ -56,7 +63,7 @@ public class SortedArrayPriorityQueue<T> implements AlarmQueue<T> {
     }
 
     @Override
-    public void add(T item, int priority) throws QueueOverflowException {
+    public void add(T item, long priority) throws QueueOverflowException {
         tailIndex = tailIndex + 1;
         if (tailIndex >= capacity) {
             /* No resizing implemented, but that would be a good enhancement. */
@@ -86,6 +93,20 @@ public class SortedArrayPriorityQueue<T> implements AlarmQueue<T> {
             tailIndex = tailIndex - 1;
         }
     }
+    
+    public void removeAlarm() throws QueueUnderflowException {
+        if (isEmpty()) {
+            throw new QueueUnderflowException();
+        } else {
+            for (int x = 0; x > tailIndex; x ++){
+                if (x > tailIndex){
+                    storage[x] = storage[x + 1];
+                }
+                tailIndex = tailIndex -1;
+            }
+        }
+        
+    }
 
     @Override
     public boolean isEmpty() {
@@ -93,7 +114,7 @@ public class SortedArrayPriorityQueue<T> implements AlarmQueue<T> {
     }
     
     @Override
-    public int RtnPriority() throws QueueUnderflowException {
+    public long RtnPriority() throws QueueUnderflowException {
         if (isEmpty()) {
             throw new QueueUnderflowException();
         } else {
@@ -106,7 +127,7 @@ public class SortedArrayPriorityQueue<T> implements AlarmQueue<T> {
         String result = "[";
         for (int i = 0; i <= tailIndex; i++) {
             if (i > 0) {
-                result = result + ", ";
+                result = result + " - ";
             }
             result = result + storage[i];
         }
@@ -130,16 +151,61 @@ public class SortedArrayPriorityQueue<T> implements AlarmQueue<T> {
             return (tailIndex);
         }    }
     
-    
-    
     @Override
-    public AlarmTime ReturnAlarm(){
-        for(int i = 0; i < storage.length; i ++){
-            return (AlarmTime) storage[i];
+    public String[] GetAlarms() throws NullPointerException{
+{
+        System.out.println("Getting Alarms ***********");
+        String[] ArrStr = new String[tailIndex+1];
+        
+                System.out.println("building array Alarms ***********"+tailIndex);
+        
+                System.out.println("P "+((AlarmTime<T>) storage[0]).getPriority());
+              //  long a = ((AlarmTime<T>) storage[0]).getPriority();
+           // System.out.println(a);
+           // Date d = new Date(a);
+          // Date d = new Date();
+           
+           /*System.out.println("New Date object is    " +d);
+           System.out.println("New Date object string    " +d.toString());
+            DateFormat f = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            f.setTimeZone(TimeZone.getTimeZone("GMT"));
+            String fd = f.format(d);
+            d.setTime(a);*/
+           
+     
+            //System.out.println("Time :"+fd);
+        try{
+        for(int x = 0; x < tailIndex+1;x++){
+            
+            System.out.println("Running loop");
+            long a = ((AlarmTime<T>) storage[x]).getPriority();
+                        
+
+            Date d = new Date(a*1000L);
+            
+            DateFormat f = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+            f.setTimeZone(TimeZone.getTimeZone("GMT+1"));
+            
+            String fd = f.format(d);
+             
+            System.out.println("Alarm "+x+" "+fd);
+            ArrStr[x] = fd;
+            
+            System.out.println("Number of elemts "+x);
+               
+        }
+        }catch(NullPointerException e){
+            e.getMessage();
+        }
+            //System.out.println(ArrStr.length);
+        return ArrStr;
         }
         
     }
+
+
+     
     
-    
+   
     
 }
