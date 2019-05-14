@@ -76,9 +76,7 @@ public class View implements Observer{
                     AddAlarm();
                 } catch (QueueOverflowException e) {
                     System.out.println("Add operation failed: " + e);
-                } catch (ParseException ex) {
-                    Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (QueueUnderflowException ex) {
+                } catch (ParseException | QueueUnderflowException ex) {
                     Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
                 }   
             }
@@ -102,9 +100,7 @@ public class View implements Observer{
             public void actionPerformed(ActionEvent ae) {
                 try {
                     UpdateAlarm();
-                } catch (QueueUnderflowException ex) {
-                    Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (NullPointerException ex) {
+                } catch (QueueUnderflowException | NullPointerException | QueueOverflowException ex) {
                     Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -245,7 +241,7 @@ public class View implements Observer{
                    comboFrame.setVisible(true); 
             }
     }
-    public void UpdateAlarm()throws QueueUnderflowException, NullPointerException{
+    public void UpdateAlarm()throws QueueUnderflowException, NullPointerException, QueueOverflowException{
            
             if(q.isEmpty()){
                 
@@ -286,5 +282,59 @@ public class View implements Observer{
                    comboFrame.add(btnRemove,BorderLayout.SOUTH);
                    comboFrame.setVisible(true); 
             }
+            
+            Date date = Calendar.getInstance().getTime();
+            System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+            SpinnerDateModel sm =
+             new SpinnerDateModel(date,null,null,Calendar.HOUR_OF_DAY);
+             JSpinner spinner = new JSpinner(sm);
+             JSpinner.DateEditor de = new JSpinner.DateEditor(spinner," HH:mm yy/MM/dd");
+             spinner.setEditor(de);
+             int option = JOptionPane.showOptionDialog(null, spinner, "Add alarm time", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
+             if (option == JOptionPane.CANCEL_OPTION){
+            // user hit cancel
+             } else if (option == JOptionPane.OK_OPTION){
+           
+                try {
+                    // user entered a number
+                    
+                    /**
+                     * On OK, message and time gets grabbed
+                     */
+                    
+                    message = JOptionPane.showInputDialog("Alarm message",JOptionPane.INFORMATION_MESSAGE);
+                    Date value = date;
+                    Date sp = (Date)spinner.getValue();
+                    LocalDate localDate = sp.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    int Month = localDate.getMonthValue();
+                    int Day = localDate.getDayOfMonth();
+                    hours = sp.getHours();
+                    minutes = sp.getMinutes();
+                    
+                    System.out.println("Text is     "+message);
+                    Alarm alarm = new Alarm(hours, minutes, Day, Month, message);
+                    System.out.println("Alarm details: " + message);
+                    System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+                    
+                    System.out.println(Integer.toString(hours)+" "+Integer.toString(minutes)+" "+Integer.toString(Day)+" "+Integer.toString(Month));
+                    priority = alarm.epoch(Integer.toString(hours),Integer.toString(minutes),Integer.toString(Day),Integer.toString(Month));
+                    
+                    Date toMS;
+                    toMS = sp;
+                    
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime((Date) spinner.getValue());
+                    long millis = (long) toMS.getTime();
+                    System.out.println("Time in milliseconds:    "+millis);
+                    
+                    
+                    q.add(alarm, priority);
+                    System.out.println("The whole queue order is - -" + q); 
+                    System.out.println("Alarm details: " + message);
+                    } catch (ParseException ex) {
+                    Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+        }
        }
 } 
