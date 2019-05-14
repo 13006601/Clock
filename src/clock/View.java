@@ -254,7 +254,7 @@ public class View implements Observer{
                         }
 
                     });
-                    
+                   comboFrame.setPreferredSize(new Dimension(200, 100));
                    comboFrame.add(combo,BorderLayout.CENTER);
                    comboFrame.pack();
                    comboFrame.add(btnRemove,BorderLayout.SOUTH);
