@@ -113,6 +113,33 @@ public class SortedArrayPriorityQueue<T> implements AlarmQueue<T> {
         result = result + "]";
         return result;
     }
+    
+    @Override
+    public int ReturnCapacity() throws QueueUnderflowException{
+        if (isEmpty()) {
+            throw new QueueUnderflowException();
+        } else {
+            return (capacity);
+        }    }
 
+       @Override
+    public int ReturnTailIndex() throws QueueUnderflowException{
+        if (isEmpty()) {
+            throw new QueueUnderflowException();
+        } else {
+            return (tailIndex);
+        }    }
+    
+    
+    
+    @Override
+    public AlarmTime ReturnAlarm(){
+        for(int i = 0; i < storage.length; i ++){
+            return (AlarmTime) storage[i];
+        }
+        
+    }
+    
+    
     
 }
