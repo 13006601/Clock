@@ -84,7 +84,7 @@ public class View implements Observer{
             }
     
         });
-        /*
+        
         button3.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -95,7 +95,7 @@ public class View implements Observer{
                     Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }  
-    });*/
+    });
     }
     
     @Override
@@ -196,7 +196,6 @@ public class View implements Observer{
     }
     
     public void AlarmTrigger() throws QueueUnderflowException {
-        System.out.println("Alarm details: " + message);
         JOptionPane.showMessageDialog(null,message);
         q.remove();
         System.out.println(q.toString());
@@ -205,25 +204,40 @@ public class View implements Observer{
    }
     
     public void RemoveAlarm() throws QueueUnderflowException{
-            JList list = new JList(); //data has type Object[]
-            
-            //loop through storage, add item x to list; draw list
-            for(int x = 0; x < q.storage.length; x++){
-                
-                list.add(q);
-            }
-            
-            list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-            list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-            list.setVisibleRowCount(-1);
 
-            JScrollPane listScroller = new JScrollPane(list);
-            listScroller.setPreferredSize(new Dimension(250, 100));
-            int option = JOptionPane.showOptionDialog(null, list, "Remove alarm", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
-        if (option == JOptionPane.CANCEL_OPTION){
-            // user hit cancel
-        } else if (option == JOptionPane.OK_OPTION){
-            q.remove();
-           }
+            //loop through storage, add item x to list; draw list
+
+
+            if(q.isEmpty()){
+             JOptionPane.showMessageDialog(null,"No Alarms Exist");
+            }
+            else{
+                
+                           // JList list = new JList(); //data has type Object[]
+                    JFrame comboFrame = new JFrame();
+                    Container pane = comboFrame.getContentPane();
+                    comboFrame.setTitle("Alarm Removal");
+                    comboFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+                
+                    JComboBox combo = new JComboBox();
+                    pane.add(combo);
+                //JDialog warn = new JDialog(comboFrame,"No Alarms To Delete");
+                 for(int x = 0; x < q.ReturnCapacity(); x++){
+                     
+                    combo.add(combo, x);
+                    
+                 }
+                 
+                 /*
+                int option = JOptionPane.showOptionDialog(null, pane, "Remove alarm", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
+                if (option == JOptionPane.CANCEL_OPTION){
+                    // user hit cancel
+                } else if (option == JOptionPane.OK_OPTION){
+                    q.remove();
+                   }*/
+            }
+   
+
     }
-}  
+} 
