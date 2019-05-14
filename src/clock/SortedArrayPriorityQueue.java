@@ -94,19 +94,29 @@ public class SortedArrayPriorityQueue<T> implements AlarmQueue<T> {
         }
     }
     
-    public void removeAlarm() throws QueueUnderflowException {
+    @Override
+    public void removeSelAlarm(int sel) throws QueueUnderflowException {
+        System.out.println("Sel value "+sel);
         if (isEmpty()) {
             throw new QueueUnderflowException();
         } else {
-            for (int x = 0; x > tailIndex; x ++){
-                if (x > tailIndex){
-                    storage[x] = storage[x + 1];
+                            
+            for ( int x = 0; x > tailIndex; x++){
+                if (x >= sel){
+                    if(!(x+1 > tailIndex)){
+                        storage[x] = storage[x+1];
+                        System.out.println("Rmoveing "+x);
+                    }
                 }
-                tailIndex = tailIndex -1;
             }
+            tailIndex = tailIndex -1;
+            
+            
+            System.out.println(isEmpty());
         }
         
     }
+  
 
     @Override
     public boolean isEmpty() {
@@ -160,27 +170,12 @@ public class SortedArrayPriorityQueue<T> implements AlarmQueue<T> {
                 System.out.println("building array Alarms ***********"+tailIndex);
         
                 System.out.println("P "+((AlarmTime<T>) storage[0]).getPriority());
-              //  long a = ((AlarmTime<T>) storage[0]).getPriority();
-           // System.out.println(a);
-           // Date d = new Date(a);
-          // Date d = new Date();
-           
-           /*System.out.println("New Date object is    " +d);
-           System.out.println("New Date object string    " +d.toString());
-            DateFormat f = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-            f.setTimeZone(TimeZone.getTimeZone("GMT"));
-            String fd = f.format(d);
-            d.setTime(a);*/
-           
-     
-            //System.out.println("Time :"+fd);
         try{
         for(int x = 0; x < tailIndex+1;x++){
             
             System.out.println("Running loop");
             long a = ((AlarmTime<T>) storage[x]).getPriority();
                         
-
             Date d = new Date(a*1000L);
             
             DateFormat f = new SimpleDateFormat("dd/MM/yyyy HH:mm");
@@ -190,17 +185,13 @@ public class SortedArrayPriorityQueue<T> implements AlarmQueue<T> {
              
             System.out.println("Alarm "+x+" "+fd);
             ArrStr[x] = fd;
-            
-            System.out.println("Number of elemts "+x);
-               
+            System.out.println("Number of elemts "+x);      
         }
         }catch(NullPointerException e){
             e.getMessage();
         }
-            //System.out.println(ArrStr.length);
         return ArrStr;
-        }
-        
+        } 
     }
 
 
