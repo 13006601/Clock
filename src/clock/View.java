@@ -247,8 +247,7 @@ public class View implements Observer{
                 
              JOptionPane.showMessageDialog(null,"No Alarms Exist");
              
-            }
-            else{
+            }else{
                     JFrame comboFrame = new JFrame();
                     comboFrame.setTitle("Alarm Removal");
                     comboFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -261,41 +260,19 @@ public class View implements Observer{
           
                         @Override
                         public void actionPerformed(ActionEvent ae) {
-                            try {
-                                int sel = combo.getSelectedIndex();
-                                System.out.println(sel);
-                                q.removeSelAlarm(sel);
-                                if(!q.isEmpty()){
-                                    combo.addItem(q.GetAlarms());
-                                }else{
-                                    JOptionPane.showMessageDialog(null,"No Alarms Exist");
-                                    combo.removeAllItems();
-                                }
-                            } catch (QueueUnderflowException ex) {
-                                Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                        }
-                    });
-                   comboFrame.setPreferredSize(new Dimension(200, 100));
-                   comboFrame.add(combo,BorderLayout.CENTER);
-                   comboFrame.pack();
-                   comboFrame.add(btnRemove,BorderLayout.SOUTH);
-                   comboFrame.setVisible(true); 
-            }
-            
-            Date date = Calendar.getInstance().getTime();
-            System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-            SpinnerDateModel sm =
-             new SpinnerDateModel(date,null,null,Calendar.HOUR_OF_DAY);
-             JSpinner spinner = new JSpinner(sm);
-             JSpinner.DateEditor de = new JSpinner.DateEditor(spinner," HH:mm yy/MM/dd");
-             spinner.setEditor(de);
-             int option = JOptionPane.showOptionDialog(null, spinner, "Add alarm time", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
-             if (option == JOptionPane.CANCEL_OPTION){
-            // user hit cancel
-             } else if (option == JOptionPane.OK_OPTION){
+                            Date date = Calendar.getInstance().getTime();
+                   System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+                   SpinnerDateModel sm =
+                   new SpinnerDateModel(date,null,null,Calendar.HOUR_OF_DAY);
+                   JSpinner spinner = new JSpinner(sm);
+                   JSpinner.DateEditor de = new JSpinner.DateEditor(spinner," HH:mm yy/MM/dd");
+                   spinner.setEditor(de);
+                   int option = JOptionPane.showOptionDialog(null, spinner, "Add alarm time", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
+                   if (option == JOptionPane.CANCEL_OPTION){
+                   // user hit cancel
+                        } else if (option == JOptionPane.OK_OPTION){
            
-                try {
+                        try {
                     // user entered a number
                     
                     /**
@@ -331,10 +308,18 @@ public class View implements Observer{
                     q.add(alarm, priority);
                     System.out.println("The whole queue order is - -" + q); 
                     System.out.println("Alarm details: " + message);
-                    } catch (ParseException ex) {
+                    } catch (   ParseException | QueueOverflowException ex) {
                     Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
-
-        }
-       }
+                            
+                        }
+                    });
+                   comboFrame.setPreferredSize(new Dimension(200, 100));
+                   comboFrame.add(combo,BorderLayout.CENTER);
+                   comboFrame.pack();
+                   comboFrame.add(btnRemove,BorderLayout.SOUTH);
+                   comboFrame.setVisible(true);          
+          }       
+      }
 } 
