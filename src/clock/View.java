@@ -22,7 +22,8 @@ public class View implements Observer{
     ClockPanel panel;
     JButton AddAlarm;
     JButton RemoveAlarm;
-    int priority, hours, minutes, currhrs, currmins;
+    int hours, minutes, currhrs, currmins;
+    long priority;
     String message;
     AlarmQueue<Alarm> q = new SortedArrayPriorityQueue<>(30);
     
@@ -185,7 +186,7 @@ public class View implements Observer{
            System.out.println("Time in milliseconds:    "+millis);
            
            
-          q.add(alarm,priority);
+          q.add(alarm, priority);
          
           //System.out.println("The head of the queue is :  "  + q.head().toString());
          //System.out.println(alarm+","+priority);
@@ -203,32 +204,62 @@ public class View implements Observer{
         Date dt = Calendar.getInstance().getTime();
    }
     
-    public void RemoveAlarm() throws QueueUnderflowException{
+    public void RemoveAlarm() throws QueueUnderflowException, NullPointerException{
 
             //loop through storage, add item x to list; draw list
 
 
             if(q.isEmpty()){
+                                   
+
              JOptionPane.showMessageDialog(null,"No Alarms Exist");
             }
             else{
                 
-                           // JList list = new JList(); //data has type Object[]
+                    // JList list = new JList(); //data has type Object[]
                     JFrame comboFrame = new JFrame();
-                    Container pane = comboFrame.getContentPane();
+                    //Container pane = comboFrame.
                     comboFrame.setTitle("Alarm Removal");
-                    comboFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                    comboFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-                
-                    JComboBox combo = new JComboBox();
-                    pane.add(combo);
-                //JDialog warn = new JDialog(comboFrame,"No Alarms To Delete");
-                 for(int x = 0; x < q.ReturnCapacity(); x++){
-                     
-                    combo.add(combo, x);
+                 System.out.println(" q to string is:   "+q.toString());
+                    //Date d = new Date(q.toString().split("-"));
+                    //String alarms[] = ;
                     
-                 }
-                 
+                    //System.out.println(alarms.length);
+                   // String arr[] = q.toString().split(",");
+                    
+                    final JComboBox combo = new JComboBox(q.GetAlarms());
+                    final JButton btnRemove = new JButton("Remove Alarm");
+                    btnRemove.addActionListener(new ActionListener() {
+          
+                        @Override
+                        public void actionPerformed(ActionEvent ae) {
+
+                            try {
+                                int sel = combo.getSelectedIndex();
+                                System.out.println(sel);
+                                q.removeSelAlarm(sel);
+                                if(!q.isEmpty()){
+                                    
+                                    combo.addItem(q.GetAlarms());
+                                }else{
+                                    JOptionPane.showMessageDialog(null,"No Alarms Exist");
+                                    combo.removeAllItems();
+                                }
+                            } catch (QueueUnderflowException ex) {
+                                Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            
+                        }
+
+                    });
+                    
+                   comboFrame.add(combo,BorderLayout.CENTER);
+                   comboFrame.pack();
+                   comboFrame.add(btnRemove,BorderLayout.SOUTH);
+                   comboFrame.setVisible(true);
+                  
                  /*
                 int option = JOptionPane.showOptionDialog(null, pane, "Remove alarm", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
                 if (option == JOptionPane.CANCEL_OPTION){
