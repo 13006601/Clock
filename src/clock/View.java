@@ -242,12 +242,11 @@ public class View implements Observer{
             }
     }
     public void UpdateAlarm()throws QueueUnderflowException, NullPointerException, QueueOverflowException{
-           
+            //loop through storage, add item x to list; draw list
             if(q.isEmpty()){
-                
              JOptionPane.showMessageDialog(null,"No Alarms Exist");
-             
-            }else{
+            }
+            else{
                     JFrame comboFrame = new JFrame();
                     comboFrame.setTitle("Alarm Removal");
                     comboFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -257,7 +256,8 @@ public class View implements Observer{
                     final JComboBox combo = new JComboBox(q.GetAlarms());
                     final JButton btnRemove = new JButton("Remove Alarm");
                     btnRemove.addActionListener(new ActionListener() {
-                         @Override
+          
+                        @Override
                         public void actionPerformed(ActionEvent ae) {
 
                             try {
@@ -265,83 +265,29 @@ public class View implements Observer{
                                 System.out.println(sel);
                                 q.removeSelAlarm(sel);
                                 if(!q.isEmpty()){
-                                    
                                     combo.addItem(q.GetAlarms());
+                                try {
+                                    AddAlarm();
+                                    } catch (QueueOverflowException e) {
+                                    System.out.println("Add operation failed: " + e);
+                                    } catch (ParseException | QueueUnderflowException ex) {
+                                     Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
                                 }else{
                                     JOptionPane.showMessageDialog(null,"No Alarms Exist");
                                     combo.removeAllItems();
-                                    combo.addActionListener(new ActionListener(){
-                                      @Override
-                                        public void actionPerformed(ActionEvent ae) {
-                                        Date date = Calendar.getInstance().getTime();
-                                        System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-                                        SpinnerDateModel sm =
-                                        new SpinnerDateModel(date,null,null,Calendar.HOUR_OF_DAY);
-                                        JSpinner spinner = new JSpinner(sm);
-                                        JSpinner.DateEditor de = new JSpinner.DateEditor(spinner," HH:mm yy/MM/dd");
-                                        spinner.setEditor(de);
-                                        int option = JOptionPane.showOptionDialog(null, spinner, "Add alarm time", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
-                                        if (option == JOptionPane.CANCEL_OPTION){
-                                        // user hit cancel
-                                        } else if (option == JOptionPane.OK_OPTION){
-           
-                                        try {
-                                        // user entered a number
-                    
-                                         /**
-                                         * On OK, message and time gets grabbed
-                                         */
-                    
-                                        message = JOptionPane.showInputDialog("Alarm message",JOptionPane.INFORMATION_MESSAGE);
-                    Date value = date;
-                    Date sp = (Date)spinner.getValue();
-                    LocalDate localDate = sp.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                    int Month = localDate.getMonthValue();
-                    int Day = localDate.getDayOfMonth();
-                    hours = sp.getHours();
-                    minutes = sp.getMinutes();
-                    
-                    System.out.println("Text is     "+message);
-                    Alarm alarm = new Alarm(hours, minutes, Day, Month, message);
-                    System.out.println("Alarm details: " + message);
-                    System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-                    
-                    System.out.println(Integer.toString(hours)+" "+Integer.toString(minutes)+" "+Integer.toString(Day)+" "+Integer.toString(Month));
-                    priority = alarm.epoch(Integer.toString(hours),Integer.toString(minutes),Integer.toString(Day),Integer.toString(Month));
-                    
-                    Date toMS;
-                    toMS = sp;
-                    
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTime((Date) spinner.getValue());
-                    long millis = (long) toMS.getTime();
-                    System.out.println("Time in milliseconds:    "+millis);
-                    
-                    
-                    q.add(alarm, priority);
-                    System.out.println("The whole queue order is - -" + q); 
-                    System.out.println("Alarm details: " + message);
-                    } catch (   ParseException | QueueOverflowException ex) {
-                    Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-                            
-                        }
-
-                                           
-                                    });
-                                  
-                                }
-                                    } catch (QueueUnderflowException ex) {
+                                } 
+                            } catch (QueueUnderflowException ex) {
                                 Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
                             }
+                            
                         }
                     });
                    comboFrame.setPreferredSize(new Dimension(200, 100));
                    comboFrame.add(combo,BorderLayout.CENTER);
                    comboFrame.pack();
                    comboFrame.add(btnRemove,BorderLayout.SOUTH);
-                   comboFrame.setVisible(true);          
-          }       
+                   comboFrame.setVisible(true); 
+            }     
       }
 } 
