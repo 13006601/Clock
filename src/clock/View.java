@@ -18,7 +18,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
 
 public class View implements Observer{
-    
+    /**
+     * This section is represent Clock panel, JButtons and global variables as integers, long and string
+     * also, here is function for the making new Sorted Array Priority Queue with size 30 possible items. 
+     */
     ClockPanel panel;
     JButton AddAlarm;
     JButton RemoveAlarm;
@@ -276,6 +279,7 @@ public class View implements Observer{
                                 }else{
                                     JOptionPane.showMessageDialog(null,"No Alarms Exist");
                                     combo.removeAllItems();
+                                    
                                 } 
                             } catch (QueueUnderflowException ex) {
                                 Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
