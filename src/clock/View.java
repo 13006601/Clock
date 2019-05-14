@@ -257,29 +257,42 @@ public class View implements Observer{
                     final JComboBox combo = new JComboBox(q.GetAlarms());
                     final JButton btnRemove = new JButton("Remove Alarm");
                     btnRemove.addActionListener(new ActionListener() {
-          
-                        @Override
+                         @Override
                         public void actionPerformed(ActionEvent ae) {
-                            Date date = Calendar.getInstance().getTime();
-                   System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-                   SpinnerDateModel sm =
-                   new SpinnerDateModel(date,null,null,Calendar.HOUR_OF_DAY);
-                   JSpinner spinner = new JSpinner(sm);
-                   JSpinner.DateEditor de = new JSpinner.DateEditor(spinner," HH:mm yy/MM/dd");
-                   spinner.setEditor(de);
-                   int option = JOptionPane.showOptionDialog(null, spinner, "Add alarm time", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
-                   if (option == JOptionPane.CANCEL_OPTION){
-                   // user hit cancel
-                        } else if (option == JOptionPane.OK_OPTION){
+
+                            try {
+                                int sel = combo.getSelectedIndex();
+                                System.out.println(sel);
+                                q.removeSelAlarm(sel);
+                                if(!q.isEmpty()){
+                                    
+                                    combo.addItem(q.GetAlarms());
+                                }else{
+                                    JOptionPane.showMessageDialog(null,"No Alarms Exist");
+                                    combo.removeAllItems();
+                                    combo.addActionListener(new ActionListener(){
+                                      @Override
+                                        public void actionPerformed(ActionEvent ae) {
+                                        Date date = Calendar.getInstance().getTime();
+                                        System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+                                        SpinnerDateModel sm =
+                                        new SpinnerDateModel(date,null,null,Calendar.HOUR_OF_DAY);
+                                        JSpinner spinner = new JSpinner(sm);
+                                        JSpinner.DateEditor de = new JSpinner.DateEditor(spinner," HH:mm yy/MM/dd");
+                                        spinner.setEditor(de);
+                                        int option = JOptionPane.showOptionDialog(null, spinner, "Add alarm time", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
+                                        if (option == JOptionPane.CANCEL_OPTION){
+                                        // user hit cancel
+                                        } else if (option == JOptionPane.OK_OPTION){
            
-                        try {
-                    // user entered a number
+                                        try {
+                                        // user entered a number
                     
-                    /**
-                     * On OK, message and time gets grabbed
-                     */
+                                         /**
+                                         * On OK, message and time gets grabbed
+                                         */
                     
-                    message = JOptionPane.showInputDialog("Alarm message",JOptionPane.INFORMATION_MESSAGE);
+                                        message = JOptionPane.showInputDialog("Alarm message",JOptionPane.INFORMATION_MESSAGE);
                     Date value = date;
                     Date sp = (Date)spinner.getValue();
                     LocalDate localDate = sp.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -313,6 +326,15 @@ public class View implements Observer{
                     }
                 }
                             
+                        }
+
+                                           
+                                    });
+                                  
+                                }
+                                    } catch (QueueUnderflowException ex) {
+                                Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                         }
                     });
                    comboFrame.setPreferredSize(new Dimension(200, 100));
